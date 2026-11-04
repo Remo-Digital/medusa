@@ -50,6 +50,7 @@ export interface BaseApplicationMethod {
   value?: number
   currency_code?: string
   max_quantity?: number | null
+  min_quantity?: number | null
   buy_rules_min_quantity?: number | null
   apply_to_quantity?: number | null
   promotion?: BasePromotion

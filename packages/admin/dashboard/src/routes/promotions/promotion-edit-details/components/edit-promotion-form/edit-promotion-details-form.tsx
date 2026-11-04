@@ -32,6 +32,7 @@ const EditPromotionSchema = zod.object({
   allocation: zod.enum(["each", "across", "once"]),
   target_type: zod.enum(["order", "shipping_methods", "items"]),
   max_quantity: zod.number().min(1).optional().nullable(),
+  min_quantity: zod.number().int().min(1).optional().nullable(),
 })
 
 export const EditPromotionDetailsForm = ({
@@ -51,6 +52,7 @@ export const EditPromotionDetailsForm = ({
       value_type: promotion.application_method!.type,
       target_type: promotion.application_method!.target_type,
       max_quantity: promotion.application_method!.max_quantity,
+      min_quantity: promotion.application_method!.min_quantity ?? null,
     },
     resolver: zodResolver(EditPromotionSchema),
   })
@@ -66,6 +68,9 @@ export const EditPromotionDetailsForm = ({
   })
 
   const isFixedValueType = watchValueType === "fixed"
+  const showMinQuantity =
+    promotion.type === "standard" &&
+    promotion.application_method!.target_type === "items"
   const originalAllocation = promotion.application_method!.allocation
 
   const { mutateAsync, isPending } = useUpdatePromotion(promotion.id)
@@ -89,6 +94,7 @@ export const EditPromotionDetailsForm = ({
           type: data.value_type as any,
           allocation: data.allocation as any,
           max_quantity: data.max_quantity,
+          ...(showMinQuantity && { min_quantity: data.min_quantity ?? null }),
         },
       },
       {
@@ -422,6 +428,51 @@ export const EditPromotionDetailsForm = ({
                             <Trans
                               t={t}
                               i18nKey="promotions.form.max_quantity.description"
+                              components={[<br key="break" />]}
+                            />
+                          </Text>
+                          <Form.ErrorMessage />
+                        </Form.Item>
+                      )
+                    }}
+                  />
+                )}
+                {showMinQuantity && (
+                  <Form.Field
+                    control={form.control}
+                    name="min_quantity"
+                    render={({ field: { onChange, value, ...field } }) => {
+                      return (
+                        <Form.Item>
+                          <Form.Label optional>
+                            {t("promotions.form.min_quantity.title")}
+                          </Form.Label>
+                          <Form.Control>
+                            <Input
+                              type="number"
+                              min={1}
+                              placeholder="3"
+                              value={value ?? ""}
+                              onChange={(e) => {
+                                const value = e.target.value
+
+                                if (value === "") {
+                                  onChange(null)
+                                } else {
+                                  onChange(Number(value))
+                                }
+                              }}
+                              {...field}
+                            />
+                          </Form.Control>
+                          <Text
+                            size="small"
+                            leading="compact"
+                            className="text-ui-fg-subtle"
+                          >
+                            <Trans
+                              t={t}
+                              i18nKey="promotions.form.min_quantity.description"
                               components={[<br key="break" />]}
                             />
                           </Text>
