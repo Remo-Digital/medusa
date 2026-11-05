@@ -23,8 +23,8 @@ import IndexEngineFeatureFlag from "../../../../../../feature-flags/index-engine
   (packages/modules/index/src/utils/default-schema.ts). Only `product` qualifies
   today; the other entry points this endpoint may receive (product_category,
   product_collection, product_type, product_tag, region, currency, customer_group,
-  country, sales_channel, shipping_option_type) are not top-level types in the
-  index, so they keep using query.graph.
+  customer, country, sales_channel, shipping_option_type) are not top-level types
+  in the index, so they keep using query.graph.
 */
 const ENTITIES_SUPPORTED_BY_INDEX_ENGINE = ["product"]
 
