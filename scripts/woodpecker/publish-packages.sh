@@ -17,6 +17,7 @@ DIST_TAG="woodpecker"
 # <package dir>:<published name>
 PACKAGES=(
   "packages/core/types:medusa-types"
+  "packages/core/core-flows:medusa-core-flows"
   "packages/modules/promotion:medusa-promotion"
   "packages/medusa:medusa-medusa"
   "packages/admin/dashboard:medusa-dashboard"
